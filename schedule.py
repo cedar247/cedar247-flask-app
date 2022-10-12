@@ -24,3 +24,6 @@ problem.addConstraint(constraints_func, ['Doctor', 'Shift'])
 
 for solution in problem.getSolutions():
     print(solution)
+
+
+
