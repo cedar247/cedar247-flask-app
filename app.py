@@ -21,6 +21,8 @@ def create_schedule():
     special_shifts = data["special_shifts"]
     num_doctors = data["num_doctors"]
     doctor_categories = data["doctorCategories"]
+    year = data["year"]
+    month = data["month"]
     
     results = []
 
