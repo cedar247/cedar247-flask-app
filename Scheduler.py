@@ -1,12 +1,13 @@
 from calendar import monthrange
 
 class Scheduler:
-    def __init__(self, doctors_details, shift_types, special_shifts, num_doctors, num_days):
+    def __init__(self, doctors_details, shift_types, special_shifts, num_doctors, year, month):
         self.doctors_details = doctors_details # doctor details first element doctor id next are date with shifts that he/she want a leave
         self.shift_types = shift_types # shift types in the respective ward
         self.special_shifts = special_shifts# special shift with number of vacation days needed
         self.num_doctors = num_doctors# number of doctors need per each shift
-        self.num_days = num_days # number of days in the month
+        self.year = year
+        self.month = month
 
     def is_samedate(self, date1, date2):
         day1, month1, year1 = date1.split("-")
@@ -17,12 +18,14 @@ class Scheduler:
         return False
 
     def is_a_leave(self, date, shift_type, leaves):
-
+        
         # iterate through leaves and check whether shift is a leave
         for leave in leaves:
-            if self.is_samedate(date, leave[0]): # date is same
-                if shift_type in leave[1:]: # shift is a leave
-                    return True
+            if leave:
+                if self.is_samedate(date, leave[0]): # date is same
+                    if shift_type in leave[1:]: # shift is a leave
+                        return True
+            
 
         return False
 
@@ -31,24 +34,24 @@ class Scheduler:
         if depth == len(assignment): # base case
             return True
 
-        global doctors_details # doctor details first element doctor id next are date with shifts that he/she want a leave
-        global shift_types  # shift types in the respective ward
-        global special_shifts # special shift with number of vacation days needed
-        global num_doctors # number of doctors need per each shift
-        global num_days # number of days in the month
+        # global doctors_details # doctor details first element doctor id next are date with shifts that he/she want a leave
+        # global shift_types  # shift types in the respective ward
+        # global special_shifts # special shift with number of vacation days needed
+        # global num_doctors # number of doctors need per each shift
+        # global num_days # number of days in the month
 
-        doctor = doctors_details[depth][0] # doctor id
-        leaves = doctors_details[depth][1:] # leaves needed
-        num_shifts = len(shift_types) # number of shifts
+        doctor = self.doctors_details[depth][0] # doctor id
+        leaves = self.doctors_details[depth][1:] # leaves needed
+        num_shifts = len(self.shift_types) # number of shifts
         
         index_shift = 0
-        while index_shift < num_days:
+        while index_shift < self.num_days:
             date = shifts[index_shift][0] # date of the shifts
             allocations = shifts[index_shift][1:]
 
             index_shift_type = 0
             while index_shift_type < num_shifts:
-                shift_type = shift_types[index_shift_type]
+                shift_type = self.shift_types[index_shift_type]
                 can_allocate = True
 
                 # check if the shift is a leave
@@ -59,7 +62,7 @@ class Scheduler:
 
                 if can_allocate:
 
-                    if shifts[index_shift][index_shift_type + 1] != -1 and  len(shifts[index_shift][index_shift_type + 1]) == num_doctors[shift_type]:
+                    if shifts[index_shift][index_shift_type + 1] != -1 and  len(shifts[index_shift][index_shift_type + 1]) == self.num_doctors[shift_type]:
                         index_shift_type += 1
                         can_allocate = False
                         continue
@@ -81,8 +84,8 @@ class Scheduler:
 
                     
                     # check if shift is a special shift
-                    if shift_type in special_shifts:
-                        vacation = special_shifts[shift_type]
+                    if shift_type in self.special_shifts:
+                        vacation = self.special_shifts[shift_type]
                         index_shift += vacation
                         break
                     
@@ -98,19 +101,17 @@ class Scheduler:
         shifts = []
         assignment = {}
 
-        year = 2022
-        month = 12
-        first_day, num_days = monthrange(year, month)
+        first_day, self.num_days = monthrange(self.year, self.month)
 
-        for i in range(1, num_days+1):
-            date = str(year) + "-" + str(month) + "-" + str(i)
+        for i in range(1, self.num_days+1):
+            date = str(self.year) + "-" + str(self.month) + "-" + str(i)
 
             shift = [date]
-            for i in range(len(shift_types)):
+            for i in range(len(self.shift_types)):
                 shift.append(-1)
             shifts.append(shift)
 
-        for doctor_detail in doctors_details:
+        for doctor_detail in self.doctors_details:
             assignment[doctor_detail[0]] = -1
 
         result = self.create_schedule(assignment, shifts, 0)
