@@ -1,13 +1,14 @@
 from calendar import monthrange
 
 class Scheduler:
-    def __init__(self, doctors_details, shift_types, special_shifts, num_doctors, year, month):
+    def __init__(self, doctors_details, shift_types, special_shifts, num_doctors,consecutive_shifts, year, month):
         self.doctors_details = doctors_details # doctor details first element doctor id next are date with shifts that he/she want a leave
         self.shift_types = shift_types # shift types in the respective ward
         self.special_shifts = special_shifts# special shift with number of vacation days needed
         self.num_doctors = num_doctors# number of doctors need per each shift
+        self.consecutive_shifts = consecutive_shifts
         self.year = year
-        self.month = month
+        self.month = int(month)
 
     def is_samedate(self, date1, date2):
         day1, month1, year1 = date1.split("-")
@@ -89,7 +90,7 @@ class Scheduler:
                         index_shift += vacation
                         break
                     
-                    if not (shift_type in consecutive_shifts):
+                    if not (shift_type in self.consecutive_shifts):
                         index_shift_type += 1
                 index_shift_type += 1
 

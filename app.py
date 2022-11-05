@@ -27,7 +27,7 @@ def create_schedule():
     results = []
 
     for category in doctor_categories:
-        scheduler = Scheduler(doctors_details[category], shift_types, special_shifts, num_doctors[category], 2022, 12)
+        scheduler = Scheduler(doctors_details[category], shift_types, special_shifts, num_doctors[category], consecutive_shifts, year, month)
         results.append(scheduler.get_schedule())
 
     return results
