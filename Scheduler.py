@@ -105,7 +105,13 @@ class Scheduler:
         first_day, self.num_days = monthrange(self.year, self.month)
 
         for i in range(1, self.num_days+1):
-            date = str(self.year) + "-" + str(self.month) + "-" + str(i)
+            str_month = str(self.month)
+            str_day = str(i)
+            if len(str_month) == 1:
+                str_month = "0"+str_month
+            if len(str_day) == 1:
+                str_day = "0" + str_day
+            date = str(self.year) + "-" + str_month + "-" + str_day
 
             shift = [date]
             for i in range(len(self.shift_types)):
